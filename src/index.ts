@@ -1,24 +1,24 @@
-console.log('Try npm run lint/fix!');
+import {Server, Request, ResponseToolkit} from '@hapi/hapi';
 
-const longString =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut aliquet diam.';
+const init = async () => {
+  const server: Server = new Server({
+    port: 5000,
+    host: 'localhost',
+  });
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: (request: Request, h: ResponseToolkit) => {
+      return 'Hello World!';
+    },
+  });
+  await server.start();
+  console.log('Server running on %s', server.info.uri);
+};
 
-const trailing = 'Semicolon';
+process.on('unhandledRejection', err => {
+  console.log(err);
+  // process.exit(1);
+});
 
-const why = 'am I tabbed?';
-
-export function doSomeStuff(
-  withThis: string,
-  andThat: string,
-  andThose: string[]
-) {
-  //function on one line
-  if (!andThose.length) {
-    return false;
-  }
-  console.log(withThis);
-  console.log(andThat);
-  console.dir(andThose);
-  return;
-}
-// TODO: more examples
+init();
