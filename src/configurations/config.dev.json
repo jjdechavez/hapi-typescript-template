@@ -1,0 +1,8 @@
+{
+  "database": {
+    "connectionString": "mongodb://localhost:27017/hapi-dev"
+  },
+  "server": {
+    "port": 5000,
+  }
+}
