@@ -1,22 +1,25 @@
 import nconf from 'nconf';
 import path from 'path';
 
-const configs = new nconf.Provider({
-  env: true,
-  argv: true,
-  store: {
-    type: 'file',
-    file: path.join(
-      __dirname,
-      `./config.${process.env.NODE_ENV || 'dev'}.json`
-    ),
-  },
-});
+const configs = nconf
+  .argv()
+  .env()
+  .file({
+    file: path.join(__dirname, `/config.${process.env.NODE_ENV || 'dev'}.json`),
+  });
 
-export function getDatabaseConfig() {
+export interface ServerConfigurations {
+  port: number;
+}
+
+export interface DatabaseConfiguration {
+  connectionString: string;
+}
+
+export function getDatabaseConfig(): DatabaseConfiguration {
   return configs.get('database');
 }
 
-export function getServerConfig() {
+export function getServerConfig(): ServerConfigurations {
   return configs.get('server');
 }
