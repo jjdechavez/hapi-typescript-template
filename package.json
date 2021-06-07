@@ -10,7 +10,7 @@
     "compile": "tsc",
     "fix": "gts fix",
     "format": "yarn lint && yarn fix",
-    "prepare": "yarn run compile && husky install",
+    "prepare": "yarn run compile",
     "pretest": "yarn run compile",
     "posttest": "yarn run lint",
     "husky:prepare": "husky install",
