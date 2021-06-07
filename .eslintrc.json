@@ -1,0 +1,9 @@
+{
+  "extends": "./node_modules/gts/",
+  "rules": {
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "prefer-const": "off",
+    "@typescript-eslint/ban-ts-ignore": "off"
+  }
+}
