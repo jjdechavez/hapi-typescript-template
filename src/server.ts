@@ -18,6 +18,17 @@ export async function init(
       },
     });
 
+    if (configs.routePrefix) {
+      server.realm.modifiers.route.prefix = configs.routePrefix;
+    }
+
+    const pluginOptions = {
+      database: database,
+      serverConfigs: configs,
+    };
+
+    let pluginPromises: Promise<any>[] = [];
+
     return server;
   } catch (error) {
     console.log('Error starting server: ', error);
