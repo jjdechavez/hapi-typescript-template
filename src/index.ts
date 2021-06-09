@@ -21,6 +21,7 @@ export interface App {
 
 const start = async ({config, database}: App) => {
   const server = await Server.init(config, database);
+  await server.start();
   console.log('Server running on %s', server.info.uri);
 };
 

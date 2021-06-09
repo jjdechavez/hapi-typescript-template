@@ -4,6 +4,7 @@ dotenv.config();
 
 export interface ServerConfigurations {
   port: number;
+  host: string;
   routePrefix: string;
   plugins: string[];
 }
@@ -26,18 +27,20 @@ export function getDatabaseConfig(): DatabaseConfiguration {
 }
 
 export function getServerConfig(): ServerConfigurations {
-  let PORT = process.env.PORT || 5000;
+  const {PORT, HOST} = process.env;
+  let port = PORT || 5000;
   let route = '';
   const plugins = ['logger'];
 
-  if (!PORT) {
+  if (!HOST) {
     throw new Error(
-      'Please define the PORT environment variable inside .env.dev'
+      'Please define the HOST environment variable inside .env.dev'
     );
   }
 
   return {
-    port: +PORT,
+    port: +port,
+    host: HOST,
     routePrefix: route,
     plugins,
   };

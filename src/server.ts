@@ -29,6 +29,28 @@ export async function init(
 
     let pluginPromises: Promise<any>[] = [];
 
+    server.route({
+      method: 'GET',
+      path: '/',
+      handler: function (request, h) {
+        // you can also use a pino instance, which will be faster
+        request.logger.info('In handler %s', request.path);
+        return 'Hello World';
+      },
+    });
+
+    await server.register({
+      plugin: require('hapi-pino'),
+      options: {
+        prettyPrint: process.env.NODE_ENV !== 'production',
+        // Redact Authorization headers, see https://getpino.io/#/docs/redaction
+        redact: ['req.headers.authorization'],
+      },
+    });
+
+    // and through Hapi standard logging system
+    server.log(['subsystem'], 'third way for accessing it');
+
     return server;
   } catch (error) {
     console.log('Error starting server: ', error);
