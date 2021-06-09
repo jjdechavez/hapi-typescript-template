@@ -5,6 +5,7 @@ export function init(config: DatabaseConfiguration) {
   (<any>Mongoose).Promise = Promise;
   Mongoose.connect(process.env.MONGO_URL || config.connectionString, {
     useUnifiedTopology: true,
+    useNewUrlParser: true,
   });
 
   let mongoDb = Mongoose.connection;

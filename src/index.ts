@@ -20,7 +20,7 @@ export interface App {
 }
 
 const start = async ({config, database}: App) => {
-  const server = await Server.init(config);
+  const server = await Server.init(config, database);
   console.log('Server running on %s', server.info.uri);
 };
 
@@ -31,4 +31,4 @@ const database = Database.init(dbConfigs);
 // Init Server config
 const serverConfigs = Configs.getServerConfig();
 
-start({config: serverConfigs, database});
+start({config: serverConfigs, database: database});
