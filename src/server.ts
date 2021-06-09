@@ -2,7 +2,8 @@ import Hapi from '@hapi/hapi';
 import {ServerConfigurations} from './configurations';
 
 export async function init(
-  configs: ServerConfigurations
+  configs: ServerConfigurations,
+  database: void
 ): Promise<Hapi.Server> {
   try {
     const PORT = process.env.PORT || configs.port;
