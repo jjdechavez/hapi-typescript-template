@@ -16,7 +16,7 @@ process.on('unhandledRejection', (reason: any) => {
 
 export interface App {
   config: Configs.ServerConfigurations;
-  database: void;
+  database: Database.Database;
 }
 
 const start = async ({config, database}: App) => {

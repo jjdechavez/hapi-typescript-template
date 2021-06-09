@@ -1,7 +1,12 @@
 import Mongoose from 'mongoose';
+import {Todo, TodoModel} from './api/todos/todo';
 import {DatabaseConfiguration} from './configurations';
 
-export function init(config: DatabaseConfiguration) {
+export interface Database {
+  todoModel: Mongoose.Model<Todo>;
+}
+
+export function init(config: DatabaseConfiguration): Database {
   (<any>Mongoose).Promise = Promise;
   Mongoose.connect(process.env.MONGO_URL || config.connectionString, {
     useUnifiedTopology: true,
@@ -17,4 +22,8 @@ export function init(config: DatabaseConfiguration) {
   mongoDb.once('open', () => {
     console.log(`Connected to database: ${config.connectionString}`);
   });
+
+  return {
+    todoModel: TodoModel,
+  };
 }
