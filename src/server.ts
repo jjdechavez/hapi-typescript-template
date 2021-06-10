@@ -1,6 +1,7 @@
 import Hapi from '@hapi/hapi';
 import {ServerConfigurations} from './configurations';
 import {Database} from './database';
+import * as Todos from './api/todos';
 
 export async function init(
   configs: ServerConfigurations,
@@ -51,7 +52,10 @@ export async function init(
     });
 
     // and through Hapi standard logging system
-    server.log(['subsystem'], 'third way for accessing it');
+    // server.log(['subsystem'], 'third way for accessing it');
+    console.log('Register Routes');
+    Todos.init(server, configs, database);
+    console.log('Routes registered sucessfully.');
 
     return server;
   } catch (error) {

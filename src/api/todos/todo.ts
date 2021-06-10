@@ -12,7 +12,7 @@ export const TodoSchema = new Mongoose.Schema(
   {
     name: {type: String, required: true},
     description: String,
-    completed: String,
+    completed: {type: Boolean, default: false},
   },
   {timestamps: true}
 );
