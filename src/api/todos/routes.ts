@@ -20,7 +20,13 @@ export default function (
       tags: ['api', 'todo'],
       description: 'Create a todo.',
       validate: {
+        options: {
+          abortEarly: false,
+        },
         payload: TodoValidator.createTodoModel,
+        failAction: (request, h, err) => {
+          throw err;
+        },
       },
     },
   });
