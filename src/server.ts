@@ -22,12 +22,23 @@ export async function init(
       server.realm.modifiers.route.prefix = configs.routePrefix;
     }
 
+    const plugins = configs.plugins;
     const pluginOptions = {
       database: database,
       serverConfigs: configs,
     };
 
     let pluginPromises: Promise<any>[] = [];
+
+    plugins.forEach((pluginName: string) => {
+      let plugin = require('./plugins/' + pluginName).default();
+      console.log(
+        `Register Plugin ${plugin.info().name} v${plugin.info().version}`
+      );
+      pluginPromises.push(plugin.register(server, pluginOptions));
+    });
+
+    await Promise.all(pluginPromises);
 
     server.route({
       method: 'GET',
@@ -36,15 +47,6 @@ export async function init(
         // you can also use a pino instance, which will be faster
         request.logger.info('In handler %s', request.path);
         return 'Hello World';
-      },
-    });
-
-    await server.register({
-      plugin: require('hapi-pino'),
-      options: {
-        prettyPrint: process.env.NODE_ENV !== 'production',
-        // Redact Authorization headers, see https://getpino.io/#/docs/redaction
-        redact: ['req.headers.authorization'],
       },
     });
 
