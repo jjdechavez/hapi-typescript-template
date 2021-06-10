@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/jjdechavez/hapi-typescript-template#readme",
   "devDependencies": {
+    "@types/boom": "^7.3.0",
     "@types/dotenv": "^8.2.0",
     "@types/hapi-pino": "^8.0.1",
     "@types/hapi__hapi": "^20.0.8",
@@ -44,6 +45,7 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
+    "@hapi/boom": "^9.1.2",
     "@hapi/hapi": "^20.1.3",
     "dotenv": "^10.0.0",
     "hapi-pino": "^8.3.0",

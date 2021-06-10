@@ -1,4 +1,5 @@
 import Hapi from '@hapi/hapi';
+import Boom from '@hapi/boom';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
 
@@ -15,7 +16,7 @@ export default class TodoController {
       let todo = await this.database.todoModel.create(params);
       return h.response(todo).code(201);
     } catch (error) {
-      throw Error(error);
+      return Boom.badImplementation(error);
     }
   }
 }
