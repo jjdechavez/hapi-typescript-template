@@ -1,9 +1,11 @@
 import Mongoose from 'mongoose';
 import {Todo, TodoModel} from './api/todos/todo';
+import {User, UserModel} from './api/users/user';
 import {DatabaseConfiguration} from './configurations';
 
 export interface Database {
   todoModel: Mongoose.Model<Todo>;
+  userModel: Mongoose.Model<User>;
 }
 
 export function init(config: DatabaseConfiguration): Database {
@@ -25,5 +27,6 @@ export function init(config: DatabaseConfiguration): Database {
 
   return {
     todoModel: TodoModel,
+    userModel: UserModel,
   };
 }
