@@ -32,11 +32,14 @@
   },
   "homepage": "https://github.com/jjdechavez/hapi-typescript-template#readme",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/boom": "^7.3.0",
     "@types/dotenv": "^8.2.0",
+    "@types/hapi-auth-jwt2": "^8.6.1",
     "@types/hapi-pino": "^8.0.1",
     "@types/hapi__hapi": "^20.0.8",
     "@types/joi": "^17.2.3",
+    "@types/jsonwebtoken": "^8.5.1",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^14.11.2",
     "gts": "^3.1.0",
@@ -47,9 +50,12 @@
   "dependencies": {
     "@hapi/boom": "^9.1.2",
     "@hapi/hapi": "^20.1.3",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
+    "hapi-auth-jwt2": "^10.2.0",
     "hapi-pino": "^8.3.0",
     "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.13"
   }
 }

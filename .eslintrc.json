@@ -5,6 +5,7 @@
     "@typescript-eslint/no-inferrable-types": "off",
     "prefer-const": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-this-alias": "off"
   }
 }
