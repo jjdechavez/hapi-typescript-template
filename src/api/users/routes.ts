@@ -1,6 +1,6 @@
 import Hapi from '@hapi/hapi';
 import UserController from './user-controller';
-// import * as TodoValidator from './todo-validator';
+import * as UserValidator from './user-validator';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
 
@@ -14,15 +14,17 @@ export default function (
 
   server.route({
     method: 'POST',
-    path: '/todos',
+    path: '/users',
     options: {
-      handler: userController.createTodo,
+      handler: userController.createUser,
+      auth: false,
       tags: ['api', 'todo'],
-      description: 'Create a todo.',
+      description: 'Create a user.',
       validate: {
         options: {
           abortEarly: false,
         },
+        payload: UserValidator.createUserModel,
         failAction: (request, h, err) => {
           throw err;
         },
