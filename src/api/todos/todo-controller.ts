@@ -39,7 +39,6 @@ export default class TodoController {
 
   public async getTodoById(request: Request, h: Hapi.ResponseToolkit) {
     let _id = request.params['id'];
-
     let todo = await this.database.todoModel.findOne({_id}).lean().exec();
 
     if (!todo) {
@@ -47,5 +46,20 @@ export default class TodoController {
     }
 
     return todo;
+  }
+
+  public async deleteTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    let id = request.params['id'];
+    let userId = request.auth.credentials.id;
+
+    const deletedTodo = await this.database.todoModel
+      .findOneAndDelete({_id: id, userId})
+      .exec();
+
+    if (!deletedTodo) {
+      return Boom.notFound();
+    }
+
+    return deletedTodo;
   }
 }
