@@ -3,7 +3,7 @@ import Bcrypt from 'bcryptjs';
 
 export interface User extends Mongoose.Document {
   name: string;
-  email: string;
+  username: string;
   password: string;
   createdAt: Date;
   updateAt: Date;
@@ -12,7 +12,7 @@ export interface User extends Mongoose.Document {
 
 export const UserSchema = new Mongoose.Schema<User>(
   {
-    email: {type: String, unique: true, required: true},
+    username: {type: String, unique: true, required: true},
     name: {type: String, required: true},
     password: {type: String, required: true},
   },
