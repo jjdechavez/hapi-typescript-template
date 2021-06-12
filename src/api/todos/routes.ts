@@ -4,6 +4,7 @@ import TodoController from './todo-controller';
 import * as TodoValidator from './todo-validator';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
+import {jwtValidator} from '../users/user-validator';
 
 export default function (
   server: Hapi.Server,
@@ -71,6 +72,30 @@ export default function (
           abortEarly: false,
         },
         payload: TodoValidator.createTodoModel,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
+
+  server.route({
+    method: 'PUT',
+    path: '/todos/{id}',
+    options: {
+      handler: todoController.updateTodo,
+      auth: 'jwt',
+      tags: ['api', 'todos'],
+      description: 'Update todo by id.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        params: Joi.object({
+          id: Joi.string().required(),
+        }),
+        payload: TodoValidator.updateTodoModel,
+        headers: jwtValidator,
         failAction: (request, h, err) => {
           throw err;
         },

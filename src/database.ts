@@ -13,6 +13,7 @@ export function init(config: DatabaseConfiguration): Database {
   Mongoose.connect(process.env.MONGO_URL || config.connectionString, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
   });
 
   let mongoDb = Mongoose.connection;

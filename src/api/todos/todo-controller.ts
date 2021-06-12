@@ -48,12 +48,42 @@ export default class TodoController {
     return todo;
   }
 
+  public async updateTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    let userId = request.auth.credentials.id;
+    let todoId = request.params.id;
+    let payload = <Todo>request.payload;
+
+    try {
+      let todo = await this.database.todoModel
+        .findOneAndUpdate(
+          {
+            _id: todoId,
+            userId,
+          },
+          {
+            $set: payload,
+          },
+          {new: true}
+        )
+        .orFail()
+        .exec();
+
+      if (!todo) {
+        return Boom.notFound();
+      }
+
+      return todo;
+    } catch (error) {
+      return Boom.badImplementation(error);
+    }
+  }
+
   public async deleteTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    let id = request.params['id'];
+    let todoId = request.params['id'];
     let userId = request.auth.credentials.id;
 
     const deletedTodo = await this.database.todoModel
-      .findOneAndDelete({_id: id, userId})
+      .findOneAndDelete({_id: todoId, userId})
       .exec();
 
     if (!deletedTodo) {

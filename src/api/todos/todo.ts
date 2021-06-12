@@ -9,7 +9,7 @@ export interface Todo extends Mongoose.Document {
   updatedAt: Date;
 }
 
-export const TodoSchema = new Mongoose.Schema(
+export const TodoSchema = new Mongoose.Schema<Todo>(
   {
     userId: {type: String, required: true},
     name: {type: String, required: true},
