@@ -9,6 +9,11 @@ type ValidateUser = (
   h: Hapi.ResponseToolkit
 ) => Promise<{isValid: boolean}>;
 
+interface AuthStrategyOptions {
+  config: ServerConfigurations;
+  validate: ValidateUser;
+}
+
 const register = async (
   server: Hapi.Server,
   options: PluginOptions
@@ -17,11 +22,7 @@ const register = async (
     const database = options.database;
     const serverConfig = options.serverConfigs;
 
-    const validateUser: ValidateUser = async (
-      decoded: any,
-      request: Request,
-      h: Hapi.ResponseToolkit
-    ) => {
+    const validateUser: ValidateUser = async (decoded: any, _, __) => {
       const user = await database.userModel.findById(decoded.id).lean(true);
       if (!user) {
         return {isValid: false};
@@ -44,7 +45,7 @@ const register = async (
 
 const setAuthStrategy = async (
   server: Hapi.Server,
-  {config, validate}: {config: ServerConfigurations; validate: ValidateUser}
+  {config, validate}: AuthStrategyOptions
 ) => {
   server.auth.strategy('jwt', 'jwt', {
     key: config.jwtSecret,
