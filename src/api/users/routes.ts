@@ -51,4 +51,24 @@ export default function (
       },
     },
   });
+
+  server.route({
+    method: 'GET',
+    path: '/users/info',
+    options: {
+      handler: userController.infoUser,
+      auth: 'jwt',
+      tags: ['api', 'users'],
+      description: 'Get user info.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        // payload: UserValidator.jwtValidator,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 }

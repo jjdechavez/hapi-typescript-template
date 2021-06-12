@@ -32,7 +32,7 @@ export default class UserController {
   public async loginUser(request: LoginRequest, h: Hapi.ResponseToolkit) {
     const {username, password} = request.payload;
 
-    let user = await this.database.userModel.findOne({username});
+    let user = await this.database.userModel.findOne({username}).exec();
 
     if (!user) {
       return Boom.unauthorized('User does not exist.');
@@ -47,7 +47,14 @@ export default class UserController {
 
   public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     const userId = request.auth.credentials.id;
-    let user = await this.database.userModel.findById(userId);
+    let user = await this.database.userModel
+      .findById(userId)
+      .select({name: 1, username: 1})
+      .exec();
+
+    if (!user) {
+      return Boom.unauthorized('User does not exist.');
+    }
 
     return user;
   }
