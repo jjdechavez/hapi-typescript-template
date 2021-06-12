@@ -17,6 +17,7 @@ export default function (
     path: '/todos',
     options: {
       handler: todoController.createTodo,
+      auth: 'jwt',
       tags: ['api', 'todo'],
       description: 'Create a todo.',
       validate: {

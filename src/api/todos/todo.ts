@@ -1,6 +1,7 @@
 import Mongoose from 'mongoose';
 
 export interface Todo extends Mongoose.Document {
+  userId: string;
   name: string;
   description: string;
   completed: boolean;
@@ -10,6 +11,7 @@ export interface Todo extends Mongoose.Document {
 
 export const TodoSchema = new Mongoose.Schema(
   {
+    userId: {type: String, required: true},
     name: {type: String, required: true},
     description: String,
     completed: {type: Boolean, default: false},
