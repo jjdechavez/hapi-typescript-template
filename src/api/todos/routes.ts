@@ -1,4 +1,5 @@
 import Hapi from '@hapi/hapi';
+import Joi from 'joi';
 import TodoController from './todo-controller';
 import * as TodoValidator from './todo-validator';
 import {ServerConfigurations} from '@/configurations';
@@ -11,6 +12,29 @@ export default function (
 ) {
   const todoController = new TodoController(configs, database);
   server.bind(todoController);
+
+  server.route({
+    method: 'GET',
+    path: '/todos',
+    options: {
+      handler: todoController.getTodos,
+      auth: false,
+      tags: ['api', 'todo'],
+      description: 'Get todos.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        query: Joi.object({
+          limit: Joi.number().default(10),
+          skip: Joi.number().default(0),
+        }),
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 
   server.route({
     method: 'POST',

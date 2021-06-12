@@ -1,4 +1,4 @@
-import Hapi from '@hapi/hapi';
+import Hapi, {Request} from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
@@ -21,5 +21,19 @@ export default class TodoController {
     } catch (error) {
       return Boom.badImplementation(error);
     }
+  }
+
+  public async getTodos(request: Request, h: Hapi.ResponseToolkit) {
+    let limit = request.query['limit'];
+    let skip = request.query['skip'];
+
+    let todos = await this.database.todoModel
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec();
+
+    return todos;
   }
 }
