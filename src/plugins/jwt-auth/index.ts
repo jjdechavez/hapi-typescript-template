@@ -1,11 +1,11 @@
 import Hapi from '@hapi/hapi';
 import {Plugin, PluginOptions} from '../interfaces';
-import {Request} from '@/interfaces/request';
+import {AuthRequest} from '@/interfaces/request';
 import {ServerConfigurations} from '@/configurations';
 
 type ValidateUser = (
   decoded: any,
-  request: Request,
+  request: AuthRequest,
   h: Hapi.ResponseToolkit
 ) => Promise<{isValid: boolean}>;
 
@@ -24,6 +24,8 @@ const register = async (
 
     const validateUser: ValidateUser = async (decoded: any, _, __) => {
       const user = await database.userModel.findById(decoded.id).lean(true);
+      console.log('validate user: ', user);
+
       if (!user) {
         return {isValid: false};
       }

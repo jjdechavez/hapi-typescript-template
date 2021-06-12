@@ -18,13 +18,33 @@ export default function (
     options: {
       handler: userController.createUser,
       auth: false,
-      tags: ['api', 'todo'],
+      tags: ['api', 'users'],
       description: 'Create a user.',
       validate: {
         options: {
           abortEarly: false,
         },
         payload: UserValidator.createUserModel,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/users/login',
+    options: {
+      handler: userController.loginUser,
+      auth: false,
+      tags: ['api', 'users'],
+      description: 'Login a user.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        payload: UserValidator.loginUserModel,
         failAction: (request, h, err) => {
           throw err;
         },

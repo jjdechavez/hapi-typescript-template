@@ -3,7 +3,7 @@ import Boom from '@hapi/boom';
 import Jwt from 'jsonwebtoken';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
-import {Request} from '@/interfaces/request';
+import {LoginRequest, AuthRequest} from '@/interfaces/request';
 import {User} from './user';
 
 export default class UserController {
@@ -20,12 +20,35 @@ export default class UserController {
     return Jwt.sign(payload, jwtSecret, {expiresIn: jwtExpiration});
   }
 
-  public async createUser(request: Request, h: Hapi.ResponseToolkit) {
+  public async createUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     try {
-      let user: any = await this.database.userModel.create(request.payload);
+      let user = await this.database.userModel.create(request.payload);
       return h.response({token: this.generateToken(user)}).code(201);
     } catch (error) {
       return Boom.badImplementation(error);
     }
+  }
+
+  public async loginUser(request: LoginRequest, h: Hapi.ResponseToolkit) {
+    const {username, password} = request.payload;
+
+    let user = await this.database.userModel.findOne({username});
+
+    if (!user) {
+      return Boom.unauthorized('User does not exist.');
+    }
+
+    if (!user.validatePassword(password)) {
+      return Boom.unauthorized('Password is invalid.');
+    }
+
+    return {token: this.generateToken(user)};
+  }
+
+  public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    const userId = request.auth.credentials.id;
+    let user = await this.database.userModel.findById(userId);
+
+    return user;
   }
 }

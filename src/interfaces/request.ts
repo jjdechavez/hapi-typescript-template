@@ -8,13 +8,13 @@ export interface RequestAuth extends Hapi.RequestAuth {
   credentials: Credentials;
 }
 
-export interface Request extends Hapi.Request {
+export interface AuthRequest extends Hapi.Request {
   auth: RequestAuth;
 }
 
-export interface LoginRequest extends Request {
+export interface LoginRequest extends AuthRequest {
   payload: {
-    email: string;
+    username: string;
     password: string;
   };
 }

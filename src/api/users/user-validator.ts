@@ -13,7 +13,7 @@ export const updateUserModel = Joi.object().keys({
 });
 
 export const loginUserModel = Joi.object().keys({
-  username: Joi.string().email().required(),
+  username: Joi.string().required(),
   password: Joi.string().trim().required(),
 });
 
