@@ -36,4 +36,16 @@ export default class TodoController {
 
     return todos;
   }
+
+  public async getTodoById(request: Request, h: Hapi.ResponseToolkit) {
+    let _id = request.params['id'];
+
+    let todo = await this.database.todoModel.findOne({_id}).lean().exec();
+
+    if (!todo) {
+      return Boom.notFound();
+    }
+
+    return todo;
+  }
 }
