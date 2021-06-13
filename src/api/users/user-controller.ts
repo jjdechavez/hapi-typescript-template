@@ -42,7 +42,15 @@ export default class UserController {
       return Boom.unauthorized('Password is invalid.');
     }
 
-    return {token: this.generateToken(user)};
+    const token = this.generateToken(user);
+
+    h.response({
+      token,
+    })
+      .header('Authorization', token)
+      .state('token', token, {isHttpOnly: true, encoding: 'none', path: '/'});
+
+    return {token};
   }
 
   public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
