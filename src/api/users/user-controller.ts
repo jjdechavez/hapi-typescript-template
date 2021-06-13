@@ -35,7 +35,7 @@ export default class UserController {
     let user = await this.database.userModel.findOne({username}).exec();
 
     if (!user) {
-      return Boom.unauthorized('User does not exist.');
+      return Boom.notFound('User does not exist.');
     }
 
     if (!user.validatePassword(password)) {
@@ -48,7 +48,11 @@ export default class UserController {
       token,
     })
       .header('Authorization', token)
-      .state('token', token, {isHttpOnly: true, encoding: 'none', path: '/'});
+      .state('token', token, {
+        isHttpOnly: true,
+        encoding: 'none',
+        path: '/',
+      });
 
     return {token};
   }
