@@ -32,8 +32,8 @@ export default class TodoController {
       .skip(skip)
       .sort({createdAt: -1})
       .limit(limit)
-      .lean()
       .populate('user', 'name')
+      .lean()
       .exec();
 
     return h.response(todos);
@@ -41,7 +41,11 @@ export default class TodoController {
 
   public async getTodoById(request: Request, h: Hapi.ResponseToolkit) {
     let _id = request.params['id'];
-    let todo = await this.database.todoModel.findOne({_id}).lean().exec();
+    let todo = await this.database.todoModel
+      .findOne({_id})
+      .populate('user', 'name')
+      .lean()
+      .exec();
 
     if (!todo) {
       return Boom.notFound();
