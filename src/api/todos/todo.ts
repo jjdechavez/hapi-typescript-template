@@ -1,7 +1,8 @@
-import Mongoose from 'mongoose';
+import Mongoose, {PopulatedDoc} from 'mongoose';
+import {User} from '../users/user';
 
 export interface Todo extends Mongoose.Document {
-  userId: string;
+  user: PopulatedDoc<User & Mongoose.Document>;
   name: string;
   description: string;
   completed: boolean;
@@ -11,7 +12,7 @@ export interface Todo extends Mongoose.Document {
 
 export const TodoSchema = new Mongoose.Schema<Todo>(
   {
-    userId: {type: String, required: true},
+    user: {type: Mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     name: {type: String, required: true},
     description: String,
     completed: {type: Boolean, default: false},

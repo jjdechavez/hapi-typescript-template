@@ -13,7 +13,7 @@ export default class TodoController {
 
   public async createTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let params = <Todo>request.payload;
-    params.userId = request.auth.credentials.id;
+    params.user = request.auth.credentials.id;
 
     try {
       let todo = await this.database.todoModel.create(params);
@@ -33,9 +33,10 @@ export default class TodoController {
       .sort({createdAt: -1})
       .limit(limit)
       .lean()
+      .populate('user', 'name')
       .exec();
 
-    return todos;
+    return h.response(todos);
   }
 
   public async getTodoById(request: Request, h: Hapi.ResponseToolkit) {
@@ -46,7 +47,7 @@ export default class TodoController {
       return Boom.notFound();
     }
 
-    return todo;
+    return h.response(todo);
   }
 
   public async updateTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
@@ -59,7 +60,7 @@ export default class TodoController {
         .findOneAndUpdate(
           {
             _id: todoId,
-            userId,
+            user: userId,
           },
           {
             $set: payload,
@@ -73,7 +74,7 @@ export default class TodoController {
         return Boom.notFound();
       }
 
-      return todo;
+      return h.response(todo);
     } catch (error) {
       return Boom.badImplementation(error);
     }
@@ -84,13 +85,13 @@ export default class TodoController {
     let userId = request.auth.credentials.id;
 
     const deletedTodo = await this.database.todoModel
-      .findOneAndDelete({_id: todoId, userId})
+      .findOneAndDelete({_id: todoId, user: userId})
       .exec();
 
     if (!deletedTodo) {
       return Boom.notFound();
     }
 
-    return deletedTodo;
+    return h.response(deletedTodo);
   }
 }
