@@ -54,6 +54,27 @@ export default class TodoController {
     return h.response(todo);
   }
 
+  public async getUserTodos(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    let userId = request.auth.credentials.id;
+    let limit = request.query['limit'];
+
+    const user = await this.database.userModel.findById(userId).exec();
+
+    if (!user) {
+      return Boom.unauthorized();
+    }
+
+    const userTodos = await this.database.todoModel
+      .find({user: user._id})
+      .limit(limit)
+      .sort({createdAt: -1})
+      .populate('user', 'name')
+      .lean()
+      .exec();
+
+    return h.response(userTodos);
+  }
+
   public async updateTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let userId = request.auth.credentials.id;
     let todoId = request.params.id;

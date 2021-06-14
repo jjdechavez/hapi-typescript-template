@@ -124,4 +124,26 @@ export default function (
       },
     },
   });
+
+  server.route({
+    method: 'GET',
+    path: '/todos/user',
+    options: {
+      handler: todoController.getUserTodos,
+      auth: 'jwt',
+      tags: ['api', 'todo'],
+      description: 'Get user todos.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        query: Joi.object({
+          limit: Joi.number().default(10),
+        }),
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 }
