@@ -16,6 +16,7 @@ export async function init(
       routes: {
         cors: {
           origin: ['*'],
+          credentials: true,
         },
       },
     });
