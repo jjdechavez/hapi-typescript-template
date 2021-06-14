@@ -30,6 +30,7 @@ export default class TodoController {
     let todos = await this.database.todoModel
       .find()
       .skip(skip)
+      .sort({createdAt: -1})
       .limit(limit)
       .lean()
       .exec();
