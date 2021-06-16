@@ -3,31 +3,31 @@ import Boom from '@hapi/boom';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
 import {AuthRequest} from '@/interfaces/request';
-import {Todo} from './todo';
+import {Blog} from './blog';
 
-export default class TodoController {
+export default class BlogController {
   constructor(
     private configs: ServerConfigurations,
     private database: Database
   ) {}
 
-  public async createTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    let params = <Todo>request.payload;
+  public async createBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    let params = <Blog>request.payload;
     params.user = request.auth.credentials.id;
 
     try {
-      let todo = await this.database.todoModel.create(params);
-      return h.response(todo).code(201);
+      let blog = await this.database.blogModel.create(params);
+      return h.response(blog).code(201);
     } catch (error) {
       return Boom.badImplementation(error);
     }
   }
 
-  public async getTodos(request: Request, h: Hapi.ResponseToolkit) {
+  public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
     let limit = request.query['limit'];
     let skip = request.query['skip'];
 
-    let todos = await this.database.todoModel
+    let blogs = await this.database.blogModel
       .find()
       .skip(skip)
       .sort({createdAt: -1})
@@ -36,25 +36,25 @@ export default class TodoController {
       .lean()
       .exec();
 
-    return h.response(todos);
+    return h.response(blogs);
   }
 
-  public async getTodoById(request: Request, h: Hapi.ResponseToolkit) {
+  public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
     let _id = request.params['id'];
-    let todo = await this.database.todoModel
+    let blog = await this.database.blogModel
       .findOne({_id})
       .populate('user', 'name')
       .lean()
       .exec();
 
-    if (!todo) {
+    if (!blog) {
       return Boom.notFound();
     }
 
-    return h.response(todo);
+    return h.response(blog);
   }
 
-  public async getUserTodos(request: AuthRequest, h: Hapi.ResponseToolkit) {
+  public async getUserBlogs(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let userId = request.auth.credentials.id;
     let limit = request.query['limit'];
 
@@ -64,7 +64,7 @@ export default class TodoController {
       return Boom.unauthorized();
     }
 
-    const userTodos = await this.database.todoModel
+    const userBlogs = await this.database.blogModel
       .find({user: user._id})
       .limit(limit)
       .sort({createdAt: -1})
@@ -72,19 +72,19 @@ export default class TodoController {
       .lean()
       .exec();
 
-    return h.response(userTodos);
+    return h.response(userBlogs);
   }
 
-  public async updateTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
+  public async updateBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let userId = request.auth.credentials.id;
-    let todoId = request.params.id;
-    let payload = <Todo>request.payload;
+    let blogId = request.params.id;
+    let payload = <Blog>request.payload;
 
     try {
-      let todo = await this.database.todoModel
+      let blog = await this.database.blogModel
         .findOneAndUpdate(
           {
-            _id: todoId,
+            _id: blogId,
             user: userId,
           },
           {
@@ -95,28 +95,28 @@ export default class TodoController {
         .orFail()
         .exec();
 
-      if (!todo) {
+      if (!blog) {
         return Boom.notFound();
       }
 
-      return h.response(todo);
+      return h.response(blog);
     } catch (error) {
       return Boom.badImplementation(error);
     }
   }
 
-  public async deleteTodo(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    let todoId = request.params['id'];
+  public async deleteBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    let blogId = request.params['id'];
     let userId = request.auth.credentials.id;
 
-    const deletedTodo = await this.database.todoModel
-      .findOneAndDelete({_id: todoId, user: userId})
+    const deletedBlog = await this.database.blogModel
+      .findOneAndDelete({_id: blogId, user: userId})
       .exec();
 
-    if (!deletedTodo) {
+    if (!deletedBlog) {
       return Boom.notFound();
     }
 
-    return h.response(deletedTodo);
+    return h.response(deletedBlog);
   }
 }

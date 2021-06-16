@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi';
 import Joi from 'joi';
-import TodoController from './todo-controller';
-import * as TodoValidator from './todo-validator';
+import BlogController from './blog-controller';
+import * as BlogValidator from './blog-validator';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
 import {jwtValidator} from '../users/user-validator';
@@ -11,17 +11,17 @@ export default function (
   configs: ServerConfigurations,
   database: Database
 ) {
-  const todoController = new TodoController(configs, database);
-  server.bind(todoController);
+  const blogController = new BlogController(configs, database);
+  server.bind(blogController);
 
   server.route({
     method: 'GET',
-    path: '/todos/{id}',
+    path: '/blogs/{id}',
     options: {
-      handler: todoController.getTodoById,
+      handler: blogController.getBlogById,
       auth: false,
-      tags: ['api', 'todo'],
-      description: 'Get todo by id.',
+      tags: ['api', 'blog'],
+      description: 'Get blog by id.',
       validate: {
         options: {
           abortEarly: false,
@@ -38,12 +38,12 @@ export default function (
 
   server.route({
     method: 'GET',
-    path: '/todos',
+    path: '/blogs',
     options: {
-      handler: todoController.getTodos,
+      handler: blogController.getBlogs,
       auth: false,
-      tags: ['api', 'todo'],
-      description: 'Get todos.',
+      tags: ['api', 'blog'],
+      description: 'Get blogs.',
       validate: {
         options: {
           abortEarly: false,
@@ -61,17 +61,17 @@ export default function (
 
   server.route({
     method: 'POST',
-    path: '/todos',
+    path: '/blogs',
     options: {
-      handler: todoController.createTodo,
+      handler: blogController.createBlog,
       auth: 'jwt',
-      tags: ['api', 'todo'],
-      description: 'Create a todo.',
+      tags: ['api', 'blog'],
+      description: 'Create a blog.',
       validate: {
         options: {
           abortEarly: false,
         },
-        payload: TodoValidator.createTodoModel,
+        payload: BlogValidator.createBlogModel,
         failAction: (request, h, err) => {
           throw err;
         },
@@ -81,12 +81,12 @@ export default function (
 
   server.route({
     method: 'PUT',
-    path: '/todos/{id}',
+    path: '/blogs/{id}',
     options: {
-      handler: todoController.updateTodo,
+      handler: blogController.updateBlog,
       auth: 'jwt',
-      tags: ['api', 'todos'],
-      description: 'Update todo by id.',
+      tags: ['api', 'blogs'],
+      description: 'Update blog by id.',
       validate: {
         options: {
           abortEarly: false,
@@ -94,7 +94,7 @@ export default function (
         params: Joi.object({
           id: Joi.string().required(),
         }),
-        payload: TodoValidator.updateTodoModel,
+        payload: BlogValidator.updateBlogModel,
         headers: jwtValidator,
         failAction: (request, h, err) => {
           throw err;
@@ -105,12 +105,12 @@ export default function (
 
   server.route({
     method: 'DELETE',
-    path: '/todos/{id}',
+    path: '/blogs/{id}',
     options: {
-      handler: todoController.deleteTodo,
+      handler: blogController.deleteBlog,
       auth: 'jwt',
-      tags: ['api', 'todo'],
-      description: 'Delete todo by id.',
+      tags: ['api', 'blog'],
+      description: 'Delete blog by id.',
       validate: {
         options: {
           abortEarly: false,
@@ -127,12 +127,12 @@ export default function (
 
   server.route({
     method: 'GET',
-    path: '/todos/user',
+    path: '/blogs/user',
     options: {
-      handler: todoController.getUserTodos,
+      handler: blogController.getUserBlogs,
       auth: 'jwt',
-      tags: ['api', 'todo'],
-      description: 'Get user todos.',
+      tags: ['api', 'blog'],
+      description: 'Get user blogs.',
       validate: {
         options: {
           abortEarly: false,

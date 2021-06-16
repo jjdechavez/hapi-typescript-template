@@ -1,10 +1,10 @@
 import Mongoose from 'mongoose';
-import {Todo, TodoModel} from './api/todos/todo';
+import {Blog, BlogModel} from './api/blogs/blog';
 import {User, UserModel} from './api/users/user';
 import {DatabaseConfiguration} from './configurations';
 
 export interface Database {
-  todoModel: Mongoose.Model<Todo>;
+  blogModel: Mongoose.Model<Blog>;
   userModel: Mongoose.Model<User>;
 }
 
@@ -27,7 +27,7 @@ export function init(config: DatabaseConfiguration): Database {
   });
 
   return {
-    todoModel: TodoModel,
+    blogModel: BlogModel,
     userModel: UserModel,
   };
 }
