@@ -10,3 +10,12 @@ Basic setup for HapiJs with Typescript
 
 ### Todos
 - Testing ([chai](https://github.com/chaijs/chai))
+
+### Installation
+- Clone the template `git clone https://github.com/jjdechavez/hapi-typescript-template && cd hapi-typescript-template`
+- Install the dependencies `yarn` or `npm install`
+
+### Run the application
+- Run `yarn start:watch` for development.
+- Open a browser and put this on your url `http://localhost:5000`
+- For documentation, access the url `http://localhost:5000/documentation`
