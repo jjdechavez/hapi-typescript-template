@@ -6,7 +6,7 @@ Basic setup for HapiJs with Typescript
 - Logging ([hapi-pino](https://github.com/pinojs/hapi-pino))
 - Validation ([joi](https://github.com/sideway/joi))
 - Database ([mongodb](https://docs.mongodb.com/manual/tutorial/getting-started/))
+- Documentation ([hapi-swagger](https://github.com/glennjones/hapi-swagger))
 
 ### Todos
-- Documentation ([hapi-swagger](https://github.com/glennjones/hapi-swagger))
 - Testing ([chai](https://github.com/chaijs/chai))
