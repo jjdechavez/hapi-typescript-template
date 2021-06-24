@@ -32,7 +32,7 @@ export function getServerConfig(): ServerConfigurations {
   const {PORT, HOST, jwtSecret, jwtExpiration} = process.env;
   let port = PORT || 5000;
   let route = '';
-  const plugins = ['logger', 'jwt-auth'];
+  const plugins = ['logger', 'jwt-auth', 'swagger'];
 
   if (!HOST) {
     throw new Error(
