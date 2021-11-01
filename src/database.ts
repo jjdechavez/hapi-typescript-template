@@ -1,33 +1,35 @@
-import Mongoose from 'mongoose';
-import {Blog, BlogModel} from './api/blogs/blog';
-import {User, UserModel} from './api/users/user';
+import mongodb from 'mongodb';
+// import {Blog, BlogModel} from './api/blogs/blog';
+import {User} from './api/users/user';
 import {DatabaseConfiguration} from './configurations';
 
 export interface Database {
-  blogModel: Mongoose.Model<Blog>;
-  userModel: Mongoose.Model<User>;
+  // blogModel: mongodb.Collection<Blog>;
+  userCollection: mongodb.Collection<User>;
 }
 
-export function init(config: DatabaseConfiguration): Database {
-  (<any>Mongoose).Promise = Promise;
-  Mongoose.connect(process.env.MONGO_URL || config.connectionString, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useFindAndModify: false,
-  });
+export async function init(config: DatabaseConfiguration): Promise<Database> {
+  const MongoClient = mongodb.MongoClient;
+  const client = new MongoClient(
+    process.env.MONGO_URL || config.connectionString
+  );
 
-  let mongoDb = Mongoose.connection;
+  await client.connect();
 
-  mongoDb.on('error', () => {
+  const db = client.db(process.env.MONGO_DB || config.db);
+
+  client.on('error', () => {
     console.log(`Unable to connect to database: ${config.connectionString}`);
   });
 
-  mongoDb.once('open', () => {
+  client.once('open', () => {
     console.log(`Connected to database: ${config.connectionString}`);
   });
 
+  const userCollection = db.collection<User>('User');
+
   return {
-    blogModel: BlogModel,
-    userModel: UserModel,
+    // blogModel: BlogModel,
+    userCollection,
   };
 }
