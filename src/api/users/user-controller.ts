@@ -26,9 +26,12 @@ export default class UserController {
       let user = await this.database.userCollection.insertOne(
         request.payload as User
       );
-      console.log({user});
       return h.response({token: this.generateToken(user.insertedId)}).code(201);
     } catch (error) {
+      if (error.code === 11000) {
+        return Boom.conflict('username must be unique');
+      }
+
       return Boom.badImplementation(error);
     }
   }
