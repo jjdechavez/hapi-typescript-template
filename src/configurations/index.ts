@@ -13,18 +13,27 @@ export interface ServerConfigurations {
 
 export interface DatabaseConfiguration {
   connectionString: string;
+  db: string;
 }
 
 export function getDatabaseConfig(): DatabaseConfiguration {
   let mongoURI = process.env.MONGO_URI;
+  let mongoDB = process.env.MONGO_DB;
   if (!mongoURI) {
     throw new Error(
       'Please define the MONGODB_URI environment variable inside .env.dev'
     );
   }
 
+  if (!mongoDB) {
+    throw new Error(
+      'Please define the MONGODB_DB environment variable inside .env.dev'
+    );
+  }
+
   return {
     connectionString: mongoURI,
+    db: mongoDB,
   };
 }
 

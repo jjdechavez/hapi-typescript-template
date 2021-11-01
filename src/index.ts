@@ -16,10 +16,12 @@ process.on('unhandledRejection', (reason: any) => {
 
 export interface App {
   config: Configs.ServerConfigurations;
-  database: Database.Database;
+  dbConfig: Configs.DatabaseConfiguration;
 }
 
-const start = async ({config, database}: App) => {
+const start = async ({config, dbConfig}: App) => {
+  console.log({dbConfig});
+  const database = await Database.init(dbConfig);
   const server = await Server.init(config, database);
   await server.start();
   console.log('Server running on %s', server.info.uri);
@@ -27,9 +29,9 @@ const start = async ({config, database}: App) => {
 
 // Init Database
 const dbConfigs = Configs.getDatabaseConfig();
-const database = Database.init(dbConfigs);
+// const database = Database.init(dbConfigs);
 
 // Init Server config
 const serverConfigs = Configs.getServerConfig();
 
-start({config: serverConfigs, database: database});
+start({config: serverConfigs, dbConfig: dbConfigs});

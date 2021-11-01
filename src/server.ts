@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi';
 import {ServerConfigurations} from './configurations';
 import {Database} from './database';
-import * as Blogs from './api/blogs';
+// import * as Blogs from './api/blogs';
 import * as Users from './api/users';
 
 export async function init(
@@ -43,20 +43,8 @@ export async function init(
 
     await Promise.all(pluginPromises);
 
-    server.route({
-      method: 'GET',
-      path: '/',
-      handler: function (request, h) {
-        // you can also use a pino instance, which will be faster
-        request.logger.info('In handler %s', request.path);
-        return 'Hello World';
-      },
-    });
-
-    // and through Hapi standard logging system
-    // server.log(['subsystem'], 'third way for accessing it');
     console.log('Register Routes');
-    Blogs.init(server, configs, database);
+    // Blogs.init(server, configs, database);
     Users.init(server, configs, database);
     console.log('Routes registered sucessfully.');
 
