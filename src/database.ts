@@ -25,6 +25,7 @@ export async function init(config: DatabaseConfiguration): Promise<Database> {
 
   const db = client.db(process.env.MONGO_DB || config.db);
   const userCollection = db.collection<User>('User');
+  await userCollection.createIndex({username: 1}, {unique: true});
 
   return {
     // blogModel: BlogModel,
