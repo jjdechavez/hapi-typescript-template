@@ -20,7 +20,6 @@ export interface App {
 }
 
 const start = async ({config, dbConfig}: App) => {
-  console.log({dbConfig});
   const database = await Database.init(dbConfig);
   const server = await Server.init(config, database);
   await server.start();

@@ -22,8 +22,8 @@ const register = async (
     const database = options.database;
     const serverConfig = options.serverConfigs;
 
-    const validateUser: ValidateUser = async (decoded: any, _, __) => {
-      const user = await database.userModel.findById(decoded.id).lean(true);
+    const validateUser: ValidateUser = async (decoded: any) => {
+      const user = await database.userCollection.findOne({_id: decoded.id});
       console.log('validate user: ', user);
 
       if (!user) {

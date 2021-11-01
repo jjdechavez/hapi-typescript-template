@@ -26,6 +26,7 @@ export default class UserController {
       let user = await this.database.userCollection.insertOne(
         request.payload as User
       );
+      console.log({user});
       return h.response({token: this.generateToken(user.insertedId)}).code(201);
     } catch (error) {
       return Boom.badImplementation(error);
