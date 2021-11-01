@@ -1,5 +1,6 @@
 import Hapi from '@hapi/hapi';
 import Boom from '@hapi/boom';
+import {ObjectId} from 'mongodb';
 import Jwt from 'jsonwebtoken';
 import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
@@ -12,18 +13,20 @@ export default class UserController {
     private database: Database
   ) {}
 
-  private generateToken(user: User) {
+  private generateToken(userId: ObjectId) {
     const jwtSecret = this.configs.jwtSecret;
     const jwtExpiration = this.configs.jwtExpiration;
-    const payload = {id: user._id};
+    const payload = {id: userId};
 
     return Jwt.sign(payload, jwtSecret, {expiresIn: jwtExpiration});
   }
 
   public async createUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     try {
-      let user = await this.database.userModel.create(request.payload);
-      return h.response({token: this.generateToken(user)}).code(201);
+      let user = await this.database.userCollection.insertOne(
+        request.payload as User
+      );
+      return h.response({token: this.generateToken(user.insertedId)}).code(201);
     } catch (error) {
       return Boom.badImplementation(error);
     }
@@ -32,7 +35,7 @@ export default class UserController {
   public async loginUser(request: LoginRequest, h: Hapi.ResponseToolkit) {
     const {username, password} = request.payload;
 
-    let user = await this.database.userModel.findOne({username}).exec();
+    let user = await this.database.userCollection.findOne({username});
 
     if (!user) {
       return Boom.notFound('User does not exist.');
@@ -42,7 +45,7 @@ export default class UserController {
       return Boom.unauthorized('Password is invalid.');
     }
 
-    const token = this.generateToken(user);
+    const token = this.generateToken(user._id);
 
     h.response({
       token,
@@ -59,15 +62,14 @@ export default class UserController {
 
   public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     const userId = request.auth.credentials.id;
-    let user = await this.database.userModel
-      .findById(userId)
-      .select({name: 1, username: 1})
-      .exec();
+    let user = await this.database.userCollection.findOne({
+      _id: new ObjectId(userId),
+    });
 
     if (!user) {
       return Boom.unauthorized('User does not exist.');
     }
 
-    return user;
+    return h.response(user).code(200);
   }
 }
