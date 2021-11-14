@@ -2,7 +2,7 @@ import {MongoClient, Collection} from 'mongodb';
 import {DatabaseConfiguration} from './configurations';
 
 export interface Database {
-  // blogModel: mongodb.Collection<Blog>;
+  blogCollection: Collection;
   userCollection: Collection;
 }
 
@@ -25,7 +25,10 @@ export async function init(config: DatabaseConfiguration): Promise<Database> {
   const userCollection = db.collection('users');
   await userCollection.createIndex({username: 1}, {unique: true});
 
+  const blogCollection = db.collection('blogs');
+
   return {
     userCollection,
+    blogCollection,
   };
 }
