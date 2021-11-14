@@ -1,3 +1,4 @@
+import {ObjectId} from 'mongodb';
 import Hapi from '@hapi/hapi';
 import {Plugin, PluginOptions} from '../interfaces';
 import {AuthRequest} from '@/interfaces/request';
@@ -23,8 +24,9 @@ const register = async (
     const serverConfig = options.serverConfigs;
 
     const validateUser: ValidateUser = async (decoded: any) => {
-      const user = await database.userCollection.findOne({_id: decoded.id});
-      console.log('validate user: ', user);
+      const user = await database.userCollection.findOne({
+        _id: new ObjectId(decoded.id),
+      });
 
       if (!user) {
         return {isValid: false};
