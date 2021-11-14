@@ -1,21 +1,31 @@
-import Mongoose, {PopulatedDoc} from 'mongoose';
-import {User} from '../users/user';
+import {Collection, ObjectId} from 'mongodb';
 
-export interface Blog extends Mongoose.Document {
-  user: PopulatedDoc<User & Mongoose.Document>;
+export interface Blog extends Collection {
+  _id?: ObjectId;
   name: string;
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  author: string;
+  authorId: string;
+  created: Date;
+  modified: Date;
 }
 
-export const BlogSchema = new Mongoose.Schema<Blog>(
-  {
-    user: {type: Mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    name: {type: String, required: true},
-    description: String,
-  },
-  {timestamps: true}
-);
+export interface BlogInfo {
+  name: string;
+  description: string;
+  author: string;
+  authorId: string;
+}
 
-export const BlogModel = Mongoose.model<Blog>('Blog', BlogSchema);
+export default function makeBlog(blogInfo: BlogInfo) {
+  const blog = normalize(blogInfo);
+  return blog;
+
+  function normalize(blog: BlogInfo) {
+    return {
+      ...blog,
+      created: new Date(),
+      modified: new Date(),
+    };
+  }
+}
