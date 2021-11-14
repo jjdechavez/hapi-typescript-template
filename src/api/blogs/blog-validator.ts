@@ -8,5 +8,4 @@ export const createBlogModel = Joi.object().keys({
 export const updateBlogModel = Joi.object().keys({
   name: Joi.string().required(),
   description: Joi.string().required(),
-  completed: Joi.boolean(),
 });
