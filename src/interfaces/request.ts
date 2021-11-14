@@ -3,6 +3,7 @@ import Hapi from '@hapi/hapi';
 export interface Credentials extends Hapi.AuthCredentials {
   id: string;
   username: string;
+  name: string;
 }
 
 export interface RequestAuth extends Hapi.RequestAuth {
