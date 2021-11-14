@@ -1,11 +1,9 @@
 import {MongoClient, Collection} from 'mongodb';
-// import {Blog, BlogModel} from './api/blogs/blog';
-import {User} from './api/users/user';
 import {DatabaseConfiguration} from './configurations';
 
 export interface Database {
   // blogModel: mongodb.Collection<Blog>;
-  userCollection: Collection<User>;
+  userCollection: Collection;
 }
 
 export async function init(config: DatabaseConfiguration): Promise<Database> {
@@ -24,11 +22,10 @@ export async function init(config: DatabaseConfiguration): Promise<Database> {
   });
 
   const db = client.db(process.env.MONGO_DB || config.db);
-  const userCollection = db.collection<User>('User');
+  const userCollection = db.collection('users');
   await userCollection.createIndex({username: 1}, {unique: true});
 
   return {
-    // blogModel: BlogModel,
     userCollection,
   };
 }
