@@ -18,10 +18,11 @@ export interface UserInfo {
 
 export default function makeUser(userInfo: UserInfo) {
   const normalUser = normalize(userInfo);
-  return Object.freeze(normalUser);
+  return normalUser;
 
-  function normalize({username, password}: UserInfo) {
+  function normalize({username, password, ...info}: UserInfo) {
     return {
+      ...info,
       username: username.toLowerCase(),
       password: hashPassword(password),
       created: new Date(),
