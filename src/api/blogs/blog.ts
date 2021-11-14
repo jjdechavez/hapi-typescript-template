@@ -1,6 +1,6 @@
-import {Collection, ObjectId} from 'mongodb';
+import {Document, ObjectId} from 'mongodb';
 
-export interface Blog extends Collection {
+export interface Blog extends Document {
   _id?: ObjectId;
   name: string;
   description: string;

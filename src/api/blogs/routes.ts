@@ -36,28 +36,29 @@ export default function (
   //   },
   // });
 
-  // server.route({
-  //   method: 'GET',
-  //   path: '/blogs',
-  //   options: {
-  //     handler: blogController.getBlogs,
-  //     auth: false,
-  //     tags: ['api', 'blog'],
-  //     description: 'Get blogs.',
-  //     validate: {
-  //       options: {
-  //         abortEarly: false,
-  //       },
-  //       query: Joi.object({
-  //         limit: Joi.number().default(10),
-  //         skip: Joi.number().default(0),
-  //       }),
-  //       failAction: (request, h, err) => {
-  //         throw err;
-  //       },
-  //     },
-  //   },
-  // });
+  server.route({
+    method: 'GET',
+    path: '/blogs',
+    options: {
+      handler: blogController.getBlogs,
+      auth: false,
+      tags: ['api', 'blog'],
+      description: 'Get blogs.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        query: Joi.object({
+          limit: Joi.number().default(10),
+          before: Joi.string(),
+          after: Joi.string(),
+        }),
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 
   server.route({
     method: 'POST',
@@ -72,6 +73,7 @@ export default function (
           abortEarly: false,
         },
         payload: BlogValidator.createBlogModel,
+        headers: jwtValidator,
         failAction: (request, h, err) => {
           throw err;
         },

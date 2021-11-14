@@ -4,12 +4,20 @@ import {ServerConfigurations} from '@/configurations';
 import {Database} from '@/database';
 import {AuthRequest} from '@/interfaces/request';
 import makeBlog, {Blog} from './blog';
+import {Document, Filter, ObjectId} from 'mongodb';
 
 export default class BlogController {
   constructor(
     private configs: ServerConfigurations,
     private database: Database
   ) {}
+
+  private documentToBlog({_id: id, ...doc}: Blog) {
+    return {
+      id,
+      ...doc,
+    };
+  }
 
   public async createBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let params = <Blog>request.payload;
@@ -27,21 +35,37 @@ export default class BlogController {
     }
   }
 
-  // public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
-  //   let limit = request.query['limit'];
-  //   let skip = request.query['skip'];
+  public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
+    const {limit = 10, before, after} = request.query;
+    let filter: Filter<Document> = {};
 
-  //   let blogs = await this.database.blogCollection
-  //     .find()
-  //     .skip(skip)
-  //     .sort({createdAt: -1})
-  //     .limit(limit)
-  //     .populate('user', 'name')
-  //     .lean()
-  //     .exec();
+    if (before || after) {
+      filter._id = before ? {$lt: new ObjectId(before)} : filter._id;
+      filter._id = after ? {$gt: new ObjectId(after)} : filter._id;
+    }
 
-  //   return h.response(blogs);
-  // }
+    const project = {
+      _id: 1,
+      name: 1,
+      description: 1,
+      author: 1,
+      authorId: 1,
+      created: 1,
+    };
+
+    console.log(filter);
+
+    let blogs = (await this.database.blogCollection
+      .find(filter)
+      .sort({createdAt: -1})
+      .project(project)
+      .limit(parseInt(limit, 10))
+      .toArray()) as Blog[];
+
+    blogs = blogs.map(this.documentToBlog);
+
+    return h.response(blogs).code(200);
+  }
 
   // public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
   //   let _id = request.params['id'];
