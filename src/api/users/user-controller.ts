@@ -62,9 +62,12 @@ export default class UserController {
 
   public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     const userId = request.auth.credentials.id;
-    let user = await this.database.userCollection.findOne({
-      _id: new ObjectId(userId),
-    });
+    let user = await this.database.userCollection.findOne(
+      {
+        _id: new ObjectId(userId),
+      },
+      {projection: {username: 1, _id: 1}}
+    );
 
     if (!user) {
       return Boom.unauthorized('User does not exist.');
