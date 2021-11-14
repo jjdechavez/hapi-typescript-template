@@ -14,10 +14,16 @@ export default class UserController {
     private database: Database
   ) {}
 
-  private generateToken(userId: ObjectId) {
+  private generateToken({
+    userId,
+    username,
+  }: {
+    userId: ObjectId;
+    username: string;
+  }) {
     const jwtSecret = this.configs.jwtSecret;
     const jwtExpiration = this.configs.jwtExpiration;
-    const payload = {id: userId};
+    const payload = {id: userId, username};
 
     return Jwt.sign(payload, jwtSecret, {expiresIn: jwtExpiration});
   }
@@ -26,7 +32,14 @@ export default class UserController {
     const userNormalized = makeUser(request.payload as User);
     try {
       let user = await this.database.userCollection.insertOne(userNormalized);
-      return h.response({token: this.generateToken(user.insertedId)}).code(201);
+      return h
+        .response({
+          token: this.generateToken({
+            userId: user.insertedId,
+            username: userNormalized.username,
+          }),
+        })
+        .code(201);
     } catch (error) {
       if (error.code === 11000) {
         return Boom.conflict('username must be unique');
@@ -45,7 +58,10 @@ export default class UserController {
       return Boom.unauthorized('Username or Password is invalid.');
     }
 
-    const token = this.generateToken(user._id);
+    const token = this.generateToken({
+      userId: user._id,
+      username: user.username,
+    });
 
     h.response({
       token,
@@ -62,6 +78,7 @@ export default class UserController {
 
   public async infoUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
     const userId = request.auth.credentials.id;
+
     let user = await this.database.userCollection.findOne(
       {
         _id: new ObjectId(userId),
