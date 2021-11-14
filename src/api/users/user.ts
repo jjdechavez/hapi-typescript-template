@@ -1,60 +1,38 @@
 import {Collection, ObjectId} from 'mongodb';
-// import Mongoose from 'mongoose';
-// import Bcrypt from 'bcryptjs';
+import Bcrypt from 'bcryptjs';
 
 export interface User extends Collection {
-  _id: ObjectId;
+  _id?: ObjectId;
   name: string;
   username: string;
   password: string;
-  createdAt: Date;
-  updateAt: Date;
-  validatePassword(requestPassword: string): boolean;
+  created: Date;
+  modified: Date;
 }
 
-// export const UserSchema = new Mongoose.Schema<User>(
-//   {
-//     username: {type: String, unique: true, required: true},
-//     name: {type: String, required: true},
-//     password: {type: String, required: true},
-//   },
-//   {
-//     timestamps: true,
-//   }
-// );
+export interface UserInfo {
+  name: string;
+  username: string;
+  password: string;
+}
 
-// function hashPassword(password: string): string {
-//   if (!password) {
-//     return '';
-//   }
+export default function makeUser(userInfo: UserInfo) {
+  const normalUser = normalize(userInfo);
+  return Object.freeze(normalUser);
 
-//   return Bcrypt.hashSync(password, Bcrypt.genSaltSync(8));
-// }
+  function normalize({username, password}: UserInfo) {
+    return {
+      username: username.toLowerCase(),
+      password: hashPassword(password),
+      created: new Date(),
+      modified: new Date(),
+    };
+  }
 
-// UserSchema.methods.validatePassword = function (requestPassword) {
-//   return Bcrypt.compareSync(requestPassword, this.password);
-// };
-
-// UserSchema.pre('save', function (next) {
-//   const user = this;
-
-//   if (!user.isModified('password')) {
-//     return next();
-//   }
-
-//   user['password'] = hashPassword(user['password']);
-
-//   return next();
-// });
-
-// UserSchema.pre('findOneAndUpdate', function () {
-//   const password = hashPassword(this.getUpdate()!.$set.password);
-
-//   if (!password) {
-//     return;
-//   }
-
-//   this.findOneAndUpdate({}, {password: password});
-// });
-
-// export const UserModel = Mongoose.model<User>('User', UserSchema);
+  function hashPassword(password: string): string {
+    if (!password) {
+      return '';
+    }
+    return Bcrypt.hashSync(password, Bcrypt.genSaltSync(8));
+  }
+}
