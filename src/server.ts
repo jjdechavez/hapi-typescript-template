@@ -1,7 +1,7 @@
 import Hapi from '@hapi/hapi';
 import {ServerConfigurations} from './configurations';
 import {Database} from './database';
-// import * as Blogs from './api/blogs';
+import * as Blogs from './api/blogs';
 import * as Users from './api/users';
 
 export async function init(
@@ -44,7 +44,7 @@ export async function init(
     await Promise.all(pluginPromises);
 
     console.log('Register Routes');
-    // Blogs.init(server, configs, database);
+    Blogs.init(server, configs, database);
     Users.init(server, configs, database);
     console.log('Routes registered sucessfully.');
 
