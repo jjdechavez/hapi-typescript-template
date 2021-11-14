@@ -15,28 +15,32 @@ export default class UserController {
   ) {}
 
   private generateToken({
-    userId,
+    id,
     username,
+    name,
   }: {
-    userId: ObjectId;
+    id: ObjectId;
     username: string;
+    name: string;
   }) {
     const jwtSecret = this.configs.jwtSecret;
     const jwtExpiration = this.configs.jwtExpiration;
-    const payload = {id: userId, username};
+    const payload = {id, username, name};
 
     return Jwt.sign(payload, jwtSecret, {expiresIn: jwtExpiration});
   }
 
   public async createUser(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    const userNormalized = makeUser(request.payload as User);
+    const user = makeUser(request.payload as User);
+
     try {
-      let user = await this.database.userCollection.insertOne(userNormalized);
+      const doc = await this.database.userCollection.insertOne(user);
       return h
         .response({
           token: this.generateToken({
-            userId: user.insertedId,
-            username: userNormalized.username,
+            id: doc.insertedId,
+            username: user.username,
+            name: user.name,
           }),
         })
         .code(201);
@@ -59,8 +63,9 @@ export default class UserController {
     }
 
     const token = this.generateToken({
-      userId: user._id,
+      id: user._id,
       username: user.username,
+      name: user.name,
     });
 
     h.response({
@@ -83,7 +88,7 @@ export default class UserController {
       {
         _id: new ObjectId(userId),
       },
-      {projection: {username: 1, _id: 1}}
+      {projection: {username: 1, _id: 1, name: 1}}
     );
 
     if (!user) {
