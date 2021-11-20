@@ -127,25 +127,26 @@ export default function (
   //   },
   // });
 
-  // server.route({
-  //   method: 'GET',
-  //   path: '/blogs/user',
-  //   options: {
-  //     handler: blogController.getUserBlogs,
-  //     auth: 'jwt',
-  //     tags: ['api', 'blog'],
-  //     description: 'Get user blogs.',
-  //     validate: {
-  //       options: {
-  //         abortEarly: false,
-  //       },
-  //       query: Joi.object({
-  //         limit: Joi.number().default(10),
-  //       }),
-  //       failAction: (request, h, err) => {
-  //         throw err;
-  //       },
-  //     },
-  //   },
-  // });
+  server.route({
+    method: 'GET',
+    path: '/blogs/user',
+    options: {
+      handler: blogController.getUserBlogs,
+      auth: 'jwt',
+      tags: ['api', 'blog'],
+      description: 'Get user blogs.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        query: Joi.object({
+          limit: Joi.number().default(10),
+        }),
+        headers: jwtValidator,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 }
