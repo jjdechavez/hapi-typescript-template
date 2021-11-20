@@ -81,29 +81,29 @@ export default function (
     },
   });
 
-  // server.route({
-  //   method: 'PUT',
-  //   path: '/blogs/{id}',
-  //   options: {
-  //     handler: blogController.updateBlog,
-  //     auth: 'jwt',
-  //     tags: ['api', 'blogs'],
-  //     description: 'Update blog by id.',
-  //     validate: {
-  //       options: {
-  //         abortEarly: false,
-  //       },
-  //       params: Joi.object({
-  //         id: Joi.string().required(),
-  //       }),
-  //       payload: BlogValidator.updateBlogModel,
-  //       headers: jwtValidator,
-  //       failAction: (request, h, err) => {
-  //         throw err;
-  //       },
-  //     },
-  //   },
-  // });
+  server.route({
+    method: 'PATCH',
+    path: '/blogs/{id}',
+    options: {
+      handler: blogController.updateBlog,
+      auth: 'jwt',
+      tags: ['api', 'blogs'],
+      description: 'Update blog by id.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        params: Joi.object({
+          id: Joi.string().required(),
+        }),
+        payload: BlogValidator.updateBlogModel,
+        headers: jwtValidator,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 
   // server.route({
   //   method: 'DELETE',

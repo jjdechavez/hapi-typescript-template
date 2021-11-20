@@ -15,6 +15,8 @@ export interface BlogInfo {
   description: string;
   author: string;
   authorId: string;
+  created?: Date;
+  modified: Date | null;
 }
 
 export default function makeBlog(blogInfo: BlogInfo) {
@@ -24,7 +26,7 @@ export default function makeBlog(blogInfo: BlogInfo) {
   function normalize(blog: BlogInfo) {
     return {
       ...blog,
-      created: new Date(),
+      created: blog.created ? blog.created : new Date(),
       modified: new Date(),
     };
   }

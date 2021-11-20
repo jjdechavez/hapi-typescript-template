@@ -6,6 +6,6 @@ export const createBlogModel = Joi.object().keys({
 });
 
 export const updateBlogModel = Joi.object().keys({
-  name: Joi.string().required(),
-  description: Joi.string().required(),
+  name: Joi.string().min(1).max(30),
+  description: Joi.string().max(255),
 });

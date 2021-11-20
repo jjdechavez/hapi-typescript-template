@@ -68,15 +68,15 @@ export default class BlogController {
 
   public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
     let id = request.params['id'];
-    const blog = await this.database.blogCollection.findOne({
+    const blog = (await this.database.blogCollection.findOne({
       _id: new ObjectId(id),
-    });
+    })) as Blog;
 
     if (!blog) {
       return Boom.notFound();
     }
 
-    return h.response(blog).code(200);
+    return h.response(this.documentToBlog(blog)).code(200);
   }
 
   public async getUserBlogs(request: AuthRequest, h: Hapi.ResponseToolkit) {
@@ -116,35 +116,42 @@ export default class BlogController {
     return h.response(blogs).code(200);
   }
 
-  // public async updateBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
-  //   let userId = request.auth.credentials.id;
-  //   let blogId = request.params.id;
-  //   let payload = <Blog>request.payload;
+  public async updateBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    const authorId = request.auth.credentials.id;
+    const blogId = request.params.id;
+    const changes = <Blog>request.payload;
 
-  //   try {
-  //     let blog = await this.database.blogModel
-  //       .findOneAndUpdate(
-  //         {
-  //           _id: blogId,
-  //           user: userId,
-  //         },
-  //         {
-  //           $set: payload,
-  //         },
-  //         {new: true}
-  //       )
-  //       .orFail()
-  //       .exec();
+    const existingBlog = await this.database.blogCollection.findOne({
+      _id: new ObjectId(blogId),
+      authorId,
+    });
 
-  //     if (!blog) {
-  //       return Boom.notFound();
-  //     }
+    if (!existingBlog) {
+      return Boom.notFound();
+    }
 
-  //     return h.response(blog);
-  //   } catch (error) {
-  //     return Boom.badImplementation(error);
-  //   }
-  // }
+    const blog = makeBlog({...existingBlog, ...changes, modified: null});
+
+    try {
+      const updatedBlog = await this.database.blogCollection.updateOne(
+        {
+          _id: new ObjectId(blogId),
+          authorId,
+        },
+        {
+          $set: blog,
+        }
+      );
+
+      if (!updatedBlog) {
+        return Boom.notFound();
+      }
+
+      return h.response().code(204);
+    } catch (error) {
+      return Boom.badImplementation(error);
+    }
+  }
 
   // public async deleteBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
   //   let blogId = request.params['id'];
