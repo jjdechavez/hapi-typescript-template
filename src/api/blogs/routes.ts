@@ -14,27 +14,27 @@ export default function (
   const blogController = new BlogController(configs, database);
   server.bind(blogController);
 
-  // server.route({
-  //   method: 'GET',
-  //   path: '/blogs/{id}',
-  //   options: {
-  //     handler: blogController.getBlogById,
-  //     auth: false,
-  //     tags: ['api', 'blog'],
-  //     description: 'Get blog by id.',
-  //     validate: {
-  //       options: {
-  //         abortEarly: false,
-  //       },
-  //       params: Joi.object({
-  //         id: Joi.string().required(),
-  //       }),
-  //       failAction: (request, h, err) => {
-  //         throw err;
-  //       },
-  //     },
-  //   },
-  // });
+  server.route({
+    method: 'GET',
+    path: '/blogs/{id}',
+    options: {
+      handler: blogController.getBlogById,
+      auth: false,
+      tags: ['api', 'blog'],
+      description: 'Get blog by id.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        params: Joi.object({
+          id: Joi.string().required(),
+        }),
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 
   server.route({
     method: 'GET',

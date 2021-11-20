@@ -53,11 +53,9 @@ export default class BlogController {
       created: 1,
     };
 
-    console.log(filter);
-
     let blogs = (await this.database.blogCollection
       .find(filter)
-      .sort({createdAt: -1})
+      .sort({created: -1})
       .project(project)
       .limit(parseInt(limit, 10))
       .toArray()) as Blog[];
@@ -67,20 +65,18 @@ export default class BlogController {
     return h.response(blogs).code(200);
   }
 
-  // public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
-  //   let _id = request.params['id'];
-  //   let blog = await this.database.blogModel
-  //     .findOne({_id})
-  //     .populate('user', 'name')
-  //     .lean()
-  //     .exec();
+  public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
+    let id = request.params['id'];
+    const blog = await this.database.blogCollection.findOne({
+      _id: new ObjectId(id),
+    });
 
-  //   if (!blog) {
-  //     return Boom.notFound();
-  //   }
+    if (!blog) {
+      return Boom.notFound();
+    }
 
-  //   return h.response(blog);
-  // }
+    return h.response(blog).code(200);
+  }
 
   // public async getUserBlogs(request: AuthRequest, h: Hapi.ResponseToolkit) {
   //   let userId = request.auth.credentials.id;
