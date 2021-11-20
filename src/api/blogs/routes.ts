@@ -105,27 +105,28 @@ export default function (
     },
   });
 
-  // server.route({
-  //   method: 'DELETE',
-  //   path: '/blogs/{id}',
-  //   options: {
-  //     handler: blogController.deleteBlog,
-  //     auth: 'jwt',
-  //     tags: ['api', 'blog'],
-  //     description: 'Delete blog by id.',
-  //     validate: {
-  //       options: {
-  //         abortEarly: false,
-  //       },
-  //       params: Joi.object({
-  //         id: Joi.string().required(),
-  //       }),
-  //       failAction: (request, h, err) => {
-  //         throw err;
-  //       },
-  //     },
-  //   },
-  // });
+  server.route({
+    method: 'DELETE',
+    path: '/blogs/{id}',
+    options: {
+      handler: blogController.deleteBlog,
+      auth: 'jwt',
+      tags: ['api', 'blog'],
+      description: 'Delete blog by id.',
+      validate: {
+        options: {
+          abortEarly: false,
+        },
+        params: Joi.object({
+          id: Joi.string().required(),
+        }),
+        headers: jwtValidator,
+        failAction: (request, h, err) => {
+          throw err;
+        },
+      },
+    },
+  });
 
   server.route({
     method: 'GET',

@@ -153,18 +153,19 @@ export default class BlogController {
     }
   }
 
-  // public async deleteBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
-  //   let blogId = request.params['id'];
-  //   let userId = request.auth.credentials.id;
+  public async deleteBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
+    const blogId = request.params['id'];
+    const authorId = request.auth.credentials.id;
 
-  //   const deletedBlog = await this.database.blogModel
-  //     .findOneAndDelete({_id: blogId, user: userId})
-  //     .exec();
+    const deletedBlog = await this.database.blogCollection.findOneAndDelete({
+      _id: new ObjectId(blogId),
+      authorId,
+    });
 
-  //   if (!deletedBlog) {
-  //     return Boom.notFound();
-  //   }
+    if (!deletedBlog) {
+      return Boom.notFound();
+    }
 
-  //   return h.response(deletedBlog);
-  // }
+    return h.response().code(204);
+  }
 }
