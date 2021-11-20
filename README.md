@@ -5,7 +5,7 @@ Basic setup for HapiJs with Typescript
 - Authentication ([hapi-auth-jwt2](https://github.com/dwyl/hapi-auth-jwt2))
 - Logging ([hapi-pino](https://github.com/pinojs/hapi-pino))
 - Validation ([joi](https://github.com/sideway/joi))
-- Database ([mongodb](https://docs.mongodb.com/manual/tutorial/getting-started/))
+- Database ([mongoose](https://mongoosejs.com/)) ([want mongodb checkout on branch mongodb](https://github.com/jjdechavez/hapi-typescript-template/tree/mongodb))
 - Documentation ([hapi-swagger](https://github.com/glennjones/hapi-swagger))
 
 ### Todos
