@@ -15,7 +15,7 @@
     "husky:prepare": "husky install",
     "start": "yarn run clean && yarn run fix && yarn run compile && node build/src/index.js",
     "start:watch": "ts-node-dev --respawn src/index.ts",
-    "test": "lab --typescript ./test/users/users-controller.ts",
+    "test": "lab --typescript -I 'Reflect,core,_babelPolyfill,regeneratorRuntime,__core-js_shared__,CSS' ./test/*",
     "test-cov-html": "lab -r html -o coverage.html"
   },
   "repository": {
