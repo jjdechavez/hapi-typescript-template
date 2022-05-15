@@ -16,7 +16,8 @@ export interface DatabaseConfiguration {
 }
 
 export function getDatabaseConfig(): DatabaseConfiguration {
-  let mongoURI = process.env.MONGO_URI;
+  const nodeEnv = process.env.NODE_ENV;
+  const mongoURI = `${process.env.MONGO_URI}-${nodeEnv}`;
   if (!mongoURI) {
     throw new Error(
       'Please define the MONGODB_URI environment variable inside .env.dev'
