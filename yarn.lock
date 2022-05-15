@@ -351,6 +351,13 @@
     "@hapi/podium" "4.x.x"
     "@hapi/validate" "1.x.x"
 
+"@hapi/code@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@hapi/code/-/code-9.0.0.tgz#e2123491bb3fdc67e597e2517e4ecb2ea1d267ec"
+  integrity sha512-ZTcJs6Qjs34cgit354qtu9y+pdDNfElxsNjmW3g1HoLOrpnOqIpb5HvM6pbjCPDSkIXm68qDkrt/k+J6wpbgSQ==
+  dependencies:
+    "@hapi/hoek" "10.x.x"
+
 "@hapi/content@^5.0.2":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@hapi/content/-/content-5.0.2.tgz#ae57954761de570392763e64cdd75f074176a804"

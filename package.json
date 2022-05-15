@@ -4,7 +4,6 @@
   "description": "Basic setup for HapiJs with Typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
@@ -15,7 +14,8 @@
     "posttest": "yarn run lint",
     "husky:prepare": "husky install",
     "start": "yarn run clean && yarn run fix && yarn run compile && node build/src/index.js",
-    "start:watch": "ts-node-dev --respawn src/index.ts"
+    "start:watch": "ts-node-dev --respawn src/index.ts",
+    "test": "lab --typescript ./test/users/users-controller.ts"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/jjdechavez/hapi-typescript-template#readme",
   "devDependencies": {
+    "@hapi/code": "^9.0.0",
     "@hapi/lab": "^25.0.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/boom": "^7.3.0",
