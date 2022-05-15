@@ -15,7 +15,8 @@
     "husky:prepare": "husky install",
     "start": "yarn run clean && yarn run fix && yarn run compile && node build/src/index.js",
     "start:watch": "ts-node-dev --respawn src/index.ts",
-    "test": "lab --typescript ./test/users/users-controller.ts"
+    "test": "lab --typescript ./test/users/users-controller.ts",
+    "test-cov-html": "lab -r html -o coverage.html"
   },
   "repository": {
     "type": "git",
@@ -62,5 +63,9 @@
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.13"
-  }
+  },
+  "files": [
+    "@hapi/code",
+    "@hapi/lab"
+  ]
 }
