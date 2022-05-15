@@ -6,6 +6,15 @@
     "prefer-const": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-this-alias": "off"
+    "@typescript-eslint/no-this-alias": "off",
+    "node/no-unpublished-require": [
+      "error",
+      {
+        "allowModules": [
+          "@hapi/code",
+          "@hapi/lab"
+        ]
+      }
+    ]
   }
 }
