@@ -68,6 +68,6 @@ export default class UserController {
       return Boom.unauthorized('User does not exist.');
     }
 
-    return user;
+    return h.response({user}).code(200);
   }
 }
