@@ -73,4 +73,29 @@ lab.experiment('BlogController Test', () => {
       blogs.push(blog);
     });
   });
+
+  lab.test('Should list blogs with pagination', async () => {
+    let res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + '/blogs?limit=2',
+    });
+
+    let json = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(200);
+    expect(json.length).to.equal(2);
+    expect(json[0]).to.include('name');
+    expect(json[0]).to.include('description');
+    expect(json[0]).to.include('user');
+    expect(json[0]).to.include('createdAt');
+    expect(json[0]).to.include('updatedAt');
+
+    res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + '/blogs?limit=2&skip=2',
+    });
+
+    json = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(200);
+    expect(json.length).to.equal(1);
+  });
 });
