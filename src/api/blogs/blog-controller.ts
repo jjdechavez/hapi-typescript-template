@@ -11,6 +11,14 @@ export default class BlogController {
     private database: Database
   ) {}
 
+  private documentToObject(document: Blog) {
+    const {_id, ...data} = document.toObject();
+    return {
+      ...data,
+      id: _id,
+    };
+  }
+
   public async createBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let params = <Blog>request.payload;
     params.user = request.auth.credentials.id;
@@ -42,18 +50,19 @@ export default class BlogController {
   }
 
   public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
-    let _id = request.params['id'];
-    let blog = await this.database.blogModel
+    const _id = request.params['id'];
+    const blog = await this.database.blogModel
       .findOne({_id})
       .populate('user', 'name')
-      .lean()
       .exec();
 
     if (!blog) {
       return Boom.notFound();
     }
 
-    return h.response(blog);
+    const data = this.documentToObject(blog);
+
+    return h.response(data);
   }
 
   public async getUserBlogs(request: AuthRequest, h: Hapi.ResponseToolkit) {
