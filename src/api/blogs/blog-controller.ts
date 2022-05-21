@@ -84,13 +84,14 @@ export default class BlogController {
       return Boom.unauthorized();
     }
 
-    const userBlogs = await this.database.blogModel
+    const blogs = await this.database.blogModel
       .find({user: user._id})
       .limit(limit)
       .sort({createdAt: -1})
       .populate('user', 'name')
-      .lean()
       .exec();
+
+    const userBlogs = blogs.map(this.documentToObject);
 
     return h.response(userBlogs);
   }
