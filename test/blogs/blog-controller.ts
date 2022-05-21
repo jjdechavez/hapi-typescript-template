@@ -98,4 +98,15 @@ lab.experiment('BlogController Test', () => {
     expect(res.statusCode).to.equal(200);
     expect(json.length).to.equal(1);
   });
+
+  lab.test('Should list blogs with default of 10', async () => {
+    const res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + '/blogs',
+    });
+
+    const json = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(200);
+    expect(json.length).to.equal(3);
+  });
 });
