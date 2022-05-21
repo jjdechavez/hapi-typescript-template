@@ -125,4 +125,15 @@ lab.experiment('BlogController Test', () => {
     expect(json.description).to.equal(blog.description);
     expect(json).to.not.include('_id');
   });
+
+  lab.test('Should throw blog not found', async () => {
+    const res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + `/blogs/6288893bc0347c59c78995ec`,
+    });
+
+    const json = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(404);
+    expect(json.message).to.equal('Not Found');
+  });
 });
