@@ -13,7 +13,7 @@ const serverConfig = Configs.getServerConfig();
 const lab = Lab.script();
 export {lab};
 
-type UserTest = {
+export type UserTest = {
   name: string;
   username: string;
   password: string;
