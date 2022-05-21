@@ -137,6 +137,23 @@ lab.experiment('BlogController Test', () => {
     expect(json.message).to.equal('Not Found');
   });
 
+  lab.test('Should list users blog', async () => {
+    const {token} = users[0];
+
+    const res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + '/blogs/user',
+      headers: {
+        authorization: token,
+      },
+    });
+
+    const json = JSON.parse(res.payload);
+    expect(res.statusCode).to.be.equal(200);
+    expect(json).to.be.not.null();
+    expect(json.length).to.be.equal(1);
+  });
+
   lab.test('Should remove blog', async () => {
     const {id} = blogs[2];
     const {token} = users[2];
