@@ -136,4 +136,22 @@ lab.experiment('BlogController Test', () => {
     expect(res.statusCode).to.equal(404);
     expect(json.message).to.equal('Not Found');
   });
+
+  lab.test('Should remove blog', async () => {
+    const {id} = blogs[2];
+    const {token} = users[2];
+
+    const res = await server.inject({
+      method: 'DELETE',
+      url: serverConfig.routePrefix + `/blogs/${id}`,
+      headers: {
+        authorization: token,
+      },
+    });
+
+    expect(res.statusCode).to.be.equal(204);
+
+    const blog = await database.blogModel.findOne({_id: id});
+    expect(blog).to.be.null();
+  });
 });
