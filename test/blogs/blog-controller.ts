@@ -129,7 +129,7 @@ lab.experiment('BlogController Test', () => {
   lab.test('Should throw blog not found', async () => {
     const res = await server.inject({
       method: 'GET',
-      url: serverConfig.routePrefix + `/blogs/6288893bc0347c59c78995ec`,
+      url: serverConfig.routePrefix + '/blogs/6288893bc0347c59c78995ec',
     });
 
     const json = JSON.parse(res.payload);
