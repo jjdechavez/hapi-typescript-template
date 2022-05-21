@@ -4,7 +4,7 @@ import * as Lab from '@hapi/lab';
 import * as Configs from '../../src/configurations';
 import * as Server from '../../src/server';
 import * as Database from '../../src/database';
-import userData from './users.json';
+import userData from './users.fixtures.json';
 
 const configDb = Configs.getDatabaseConfig();
 const database = Database.init(configDb);
@@ -19,6 +19,10 @@ lab.experiment('UserController Test', () => {
   lab.before(async () => {
     server = await Server.init(serverConfig, database);
     await database.userModel.deleteMany({});
+  });
+
+  lab.after(async () => {
+    await server.stop();
   });
 
   userData.forEach((user: any) => {
