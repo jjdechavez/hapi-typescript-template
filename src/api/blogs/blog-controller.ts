@@ -87,12 +87,12 @@ export default class BlogController {
   }
 
   public async updateBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    let userId = request.auth.credentials.id;
-    let blogId = request.params.id;
-    let payload = <Blog>request.payload;
+    const userId = request.auth.credentials.id;
+    const blogId = request.params.id;
+    const payload = <Blog>request.payload;
 
     try {
-      let blog = await this.database.blogModel
+      const blog = await this.database.blogModel
         .findOneAndUpdate(
           {
             _id: blogId,
@@ -110,7 +110,7 @@ export default class BlogController {
         return Boom.notFound();
       }
 
-      return h.response(blog);
+      return h.response().code(204);
     } catch (error) {
       return Boom.badImplementation(error);
     }
