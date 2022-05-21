@@ -24,8 +24,10 @@ export default class BlogController {
   }
 
   public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
-    let limit = request.query['limit'];
-    let skip = request.query['skip'];
+    const limit = request.query['limit'] || 10;
+    const page = request.query['skip'] || 1; // page
+
+    const skip = limit * page - limit;
 
     let blogs = await this.database.blogModel
       .find()
