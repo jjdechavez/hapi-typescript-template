@@ -62,4 +62,20 @@ lab.experiment('UserController Test', () => {
     expect(res.statusCode).to.equal(200);
     expect(response.token).to.not.null();
   });
+
+  lab.test('Should get current login', async () => {
+    const {token, name, username} = users[1];
+    const res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + '/users/info',
+      headers: {
+        authorization: token,
+      },
+    });
+
+    const response = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(200);
+    expect(response.name).to.equal(name);
+    expect(response.username).to.equal(username);
+  });
 });
