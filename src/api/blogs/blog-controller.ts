@@ -34,19 +34,28 @@ export default class BlogController {
   public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
     const limit = request.query['limit'] || 10;
     const page = request.query['skip'] || 1; // page
+    const fields = {
+      _id: 1,
+      name: 1,
+      description: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      user: 1,
+    };
 
     const skip = limit * page - limit;
 
-    let blogs = await this.database.blogModel
-      .find()
+    const blogs = await this.database.blogModel
+      .find({}, fields)
       .skip(skip)
       .sort({createdAt: -1})
       .limit(limit)
       .populate('user', 'name')
-      .lean()
       .exec();
 
-    return h.response(blogs);
+    const data = blogs.map(this.documentToObject);
+
+    return h.response(data);
   }
 
   public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
