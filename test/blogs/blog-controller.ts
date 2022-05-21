@@ -16,6 +16,7 @@ const lab = Lab.script();
 export {lab};
 
 type Blog = {
+  id?: string;
   name: string;
   description: string;
 };
@@ -70,7 +71,7 @@ lab.experiment('BlogController Test', () => {
       expect(response).to.include('createdAt');
       expect(response).to.include('updatedAt');
 
-      blogs.push(blog);
+      blogs.push({...blog, id: response._id});
     });
   });
 
@@ -108,5 +109,20 @@ lab.experiment('BlogController Test', () => {
     const json = JSON.parse(res.payload);
     expect(res.statusCode).to.equal(200);
     expect(json.length).to.equal(3);
+  });
+
+  lab.test('Should fetch blog by id', async () => {
+    const blog = blogs[0];
+    const res = await server.inject({
+      method: 'GET',
+      url: serverConfig.routePrefix + `/blogs/${blog.id}`,
+    });
+
+    const json = JSON.parse(res.payload);
+    expect(res.statusCode).to.equal(200);
+    expect(json.id).to.equal(blog.id);
+    expect(json.name).to.equal(blog.name);
+    expect(json.description).to.equal(blog.description);
+    expect(json).to.not.include('_id');
   });
 });
