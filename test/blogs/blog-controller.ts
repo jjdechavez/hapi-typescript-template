@@ -154,4 +154,25 @@ lab.experiment('BlogController Test', () => {
     const blog = await database.blogModel.findOne({_id: id});
     expect(blog).to.be.null();
   });
+
+  lab.test('Should update blog', async () => {
+    const {id, description} = blogs[1];
+    const {token} = users[1];
+
+    const res = await server.inject({
+      method: 'PUT',
+      url: serverConfig.routePrefix + `/blogs/${id}`,
+      headers: {
+        authorization: token,
+      },
+      payload: {name: 'Updated Blog!'},
+    });
+
+    expect(res.statusCode).to.be.equal(204);
+
+    const blog = await database.blogModel.findOne({_id: id});
+    expect(blog).to.be.not.null();
+    expect(blog!.name).to.be.equal('Updated Blog!');
+    expect(blog!.description).to.be.equal(description);
+  });
 });
