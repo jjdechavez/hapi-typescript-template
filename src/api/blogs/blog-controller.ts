@@ -128,6 +128,6 @@ export default class BlogController {
       return Boom.notFound();
     }
 
-    return h.response(deletedBlog);
+    return h.response().code(204);
   }
 }
