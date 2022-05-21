@@ -5,10 +5,15 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "rootDirs": ["src"],
-    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "rootDirs": [
+      "."
+    ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [

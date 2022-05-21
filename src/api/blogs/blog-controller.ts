@@ -11,6 +11,14 @@ export default class BlogController {
     private database: Database
   ) {}
 
+  private documentToObject(document: Blog) {
+    const {_id, ...data} = document.toObject();
+    return {
+      ...data,
+      id: _id,
+    };
+  }
+
   public async createBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
     let params = <Blog>request.payload;
     params.user = request.auth.credentials.id;
@@ -24,34 +32,46 @@ export default class BlogController {
   }
 
   public async getBlogs(request: Request, h: Hapi.ResponseToolkit) {
-    let limit = request.query['limit'];
-    let skip = request.query['skip'];
+    const limit = request.query['limit'] || 10;
+    const page = request.query['skip'] || 1; // page
+    const fields = {
+      _id: 1,
+      name: 1,
+      description: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      user: 1,
+    };
 
-    let blogs = await this.database.blogModel
-      .find()
+    const skip = limit * page - limit;
+
+    const blogs = await this.database.blogModel
+      .find({}, fields)
       .skip(skip)
       .sort({createdAt: -1})
       .limit(limit)
       .populate('user', 'name')
-      .lean()
       .exec();
 
-    return h.response(blogs);
+    const data = blogs.map(this.documentToObject);
+
+    return h.response(data);
   }
 
   public async getBlogById(request: Request, h: Hapi.ResponseToolkit) {
-    let _id = request.params['id'];
-    let blog = await this.database.blogModel
+    const _id = request.params['id'];
+    const blog = await this.database.blogModel
       .findOne({_id})
       .populate('user', 'name')
-      .lean()
       .exec();
 
     if (!blog) {
       return Boom.notFound();
     }
 
-    return h.response(blog);
+    const data = this.documentToObject(blog);
+
+    return h.response(data);
   }
 
   public async getUserBlogs(request: AuthRequest, h: Hapi.ResponseToolkit) {
@@ -64,24 +84,25 @@ export default class BlogController {
       return Boom.unauthorized();
     }
 
-    const userBlogs = await this.database.blogModel
+    const blogs = await this.database.blogModel
       .find({user: user._id})
       .limit(limit)
       .sort({createdAt: -1})
       .populate('user', 'name')
-      .lean()
       .exec();
+
+    const userBlogs = blogs.map(this.documentToObject);
 
     return h.response(userBlogs);
   }
 
   public async updateBlog(request: AuthRequest, h: Hapi.ResponseToolkit) {
-    let userId = request.auth.credentials.id;
-    let blogId = request.params.id;
-    let payload = <Blog>request.payload;
+    const userId = request.auth.credentials.id;
+    const blogId = request.params.id;
+    const payload = <Blog>request.payload;
 
     try {
-      let blog = await this.database.blogModel
+      const blog = await this.database.blogModel
         .findOneAndUpdate(
           {
             _id: blogId,
@@ -99,7 +120,7 @@ export default class BlogController {
         return Boom.notFound();
       }
 
-      return h.response(blog);
+      return h.response().code(204);
     } catch (error) {
       return Boom.badImplementation(error);
     }
@@ -117,6 +138,6 @@ export default class BlogController {
       return Boom.notFound();
     }
 
-    return h.response(deletedBlog);
+    return h.response().code(204);
   }
 }

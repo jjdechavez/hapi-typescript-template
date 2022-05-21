@@ -46,7 +46,7 @@ export async function init(
     server.route({
       method: 'GET',
       path: '/',
-      handler: function (request, h) {
+      handler: function (request) {
         // you can also use a pino instance, which will be faster
         request.logger.info('In handler %s', request.path);
         return 'Hello World';

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "My first blog!",
+    "description": "Heelo this is my first blog working with hapijs"
+  },
+  {
+    "name": "My second blog!",
+    "description": "Heelo this is my second blog working with hapijs"
+  },
+  {
+    "name": "Working with HapiJS",
+    "description": "HapiJs is dope!"
+  }
+]
